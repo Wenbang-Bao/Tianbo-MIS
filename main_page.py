@@ -23,21 +23,17 @@ def product_management():
 	if request.method == 'POST':
 		cmd = request.form.get('command')
 		if cmd == 'SAVE_PRODUCT_INFO':
-			product = ProductInfo.get_pro_from_request()
-			if product:
-				item = ProductInfo.add_item(product)
-				return jsonify(item)
+			res = ProductInfo.add_item()
+			if res:
+				return jsonify(res)
 		elif cmd == 'DELETE_PRODUCT_INFO':
-			product = ProductInfo.get_pro_from_request()
-			if product:
-				res = ProductInfo.delete_item(product)
+			res = ProductInfo.delete_item()
+			if res:
 				return jsonify(res)
 		elif cmd == 'EDIT_PRODUCT_INFO':
-			product = ProductInfo.get_pro_from_request()
-			if product:
-				ProductInfo.update_item(product)
-				item = product.get_newest_item()
-				return jsonify(item)
+			res = ProductInfo.update_item()
+			if res:
+				return jsonify(res)
 		elif cmd == 'GET_PRODUCT_LIST':
 			items = ProductInfo.get_product_list()
 			return jsonify(items)
@@ -58,15 +54,13 @@ def customer_management():
 	if request.method == 'POST':
 		cmd = request.form.get('command')
 		if cmd == 'SAVE_CUSTOMER_INFO':
-			cust = CustomerInfo.get_cust_from_request()
-			if cust:
-				CustomerInfo.add_item(cust)
-				item = cust.get_newest_item()
-				return jsonify(item)
+			print 'hllllllllll'
+			res = CustomerInfo.add_item()
+			if res:
+				return jsonify(res)
 		elif cmd == 'DELETE_CUST_INFO':
-			cust = CustomerInfo.get_cust_from_request()
-			if cust:
-				res = CustomerInfo.delete_item(cust)
+			res = CustomerInfo.delete_item()
+			if res:
 				return jsonify(res)
 		elif cmd == 'GET_CUSTOMER_INFO':	
 			size = request.form.get('filter[size]')
@@ -112,4 +106,4 @@ def order_management():
 
 
 if __name__ == '__main__':
-	app.run(host='192.168.254.177', port=8080, debug=True)
+	app.run(host='172.16.0.9', port=8080, debug=True)

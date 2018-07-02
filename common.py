@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 import xlwt
 
 app = Flask(__name__, static_folder = './dist/static', template_folder = './dist')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@localhost:3306/TB_MIS_DEV'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/TB_MIS_DEV'
 db = SQLAlchemy(app)
 
 current_param_file = './.current_param.config'
@@ -47,7 +47,7 @@ def to_response(code='FAILED', msg='', cfg=''):
 
 def get_current_param(key):
 	res = current_param_dict.get(key)
-	if res:
+	if res.strip():
 		return res
 	else:
 		load_current_param(current_param_file)
@@ -69,15 +69,16 @@ def store_current_param(filename):
 	with open(filename, 'w') as f:
 		for item in current_param_dict.items():
 			if type(item[1]).__name__ == 'list':
-				f.write('='.join([item[0], '|'.join(item[1]).encode('utf8')])+'\n')
+				f.write('='.join([item[0], '|'.join(item[1])]).encode('utf8')+'\n')
 			else:
-				f.write('='.join(item)+'\n')
+				f.write('='.join(item).encode('utf8')+'\n')
 
 def load_current_param(filename):
+	print 'load_current_param'
 	global current_param_dict
 	with open(filename, 'r+') as f:
 		for line in f:
-			if not line:
+			if line.strip():
 				key = line.split('=')[0]
 				value = line.split('=')[1]	
 				if current_param_dict.has_key(key):
